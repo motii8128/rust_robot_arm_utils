@@ -1,4 +1,4 @@
-use crate::common_interface::{Axis, TargetPosition};
+use crate::common_interface::Axis;
 
 pub struct ArmAppearance3
 {

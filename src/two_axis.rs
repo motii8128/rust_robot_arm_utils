@@ -49,15 +49,19 @@ pub struct TargetAngle
 {
     pub theta_0:f64,
     pub theta_1:f64,
+    pub theta_2:f64,
 }
 
-pub fn get_target_angle(
+pub fn create_target_angle(
     target_position:TargetPosition,
     arm:ArmAppearance2
 )->Result<TargetAngle, Error>
 {
     let x = target_position.get_x();
     let y = target_position.get_y();
+    let z = target_position.get_z();
+
+    let theta0 = (z / x).atan();
 
     let l1 = arm.get_first_axis_length();
     let l2 = arm.get_second_axis_length();
@@ -74,12 +78,12 @@ pub fn get_target_angle(
             let x1 = target_position.x - x2;
             let y1 = target_position.y - y2;
 
-            let theta1 = (y1 / x1).atan();
+            let theta1 = (y1 / x1).atan().to_degrees();
 
-            Ok(TargetAngle{theta_0:theta1, theta_1:theta2})
+            Ok(TargetAngle{theta_0:theta0, theta_1:theta1, theta_2:theta2})
         },
         false=>{
             Err(std::io::Error::new(std::io::ErrorKind::InvalidData, "TargetPosition is position that arm cannot reach"))
         }
-    }    
+    }
 }
